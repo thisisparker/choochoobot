@@ -10,7 +10,8 @@ ORBS = ["🌕","🌙","☀","☁"]
 DESERT_TILES = ["🌵","🌵","🌴","🌴","🐪","🐢","🐎"]
 FOREST_TILES = ["🌲","🌲","🌲","🌲","🐇","🌳","🌳"]
 BEACH_TILES = ["🌴","🌴","🍍","🐢"]
-SEA_TILES =["🐬","🐳","🐙"]
+SEA_TILES = ["🐬","🐳","🐙"]
+CITY_TILES = [""]
 
 def maketrain():
     scene = random.choice(SCENES)
@@ -21,6 +22,8 @@ def maketrain():
         landscape, train = make_forest()
     elif scene == "beach":
         landscape, train = make_beach()
+#    elif scene == "city":
+#        landscape, train = make_city(sky)
     mise_en_scene = (
     sky + "\n" + \
     landscape[0] + "\n" + \
@@ -84,6 +87,10 @@ def make_beach():
     landscape.append(lastrow)
     return landscape, train
 
+def make_city():
+    train = "🚅" + pick_body()
+    # TODO: make the rest of this city
+
 def make_sky():
     sky = ""
     orb = random.choice(ORBS)
@@ -108,9 +115,10 @@ def pick_engine():
 
 def pick_body():
     body = ""
-    cars = random.randint(1,10)
+    cars = random.randint(1,8)
     for _ in range(cars):
         body += random.choice(CARS)
+    body += "💨"
     return body
 
 if __name__ == "__main__":
