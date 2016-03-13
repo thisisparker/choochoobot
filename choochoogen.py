@@ -9,7 +9,7 @@ SCENES = ["desert","forest","beach"]
 ORBS = ["🌕","🌙","☀","☁"]
 DESERT_TILES = ["🌵","🌵","🌴","🌴","🐪","🐢","🐎"]
 FOREST_TILES = ["🌲","🌲","🌲","🌲","🐇","🌳","🌳"]
-BEACH_TILES = ["🌴","🌴","🍍","🐢"]
+BEACH_TILES = ["🌴","🌴","🍍","🐢","🗿"]
 SEA_TILES =["🐬","🐳","🐙"]
 
 def maketrain():
