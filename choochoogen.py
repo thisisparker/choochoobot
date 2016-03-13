@@ -9,12 +9,18 @@ SCENES = ["desert","forest","beach"]
 ORBS = ["🌕","🌙","☀","☁"]
 DESERT_TILES = ["🌵","🌵","🌴","🌴","🐪","🐢","🐎"]
 FOREST_TILES = ["🌲","🌲","🌲","🌲","🐇","🌳","🌳"]
-BEACH_TILES = ["🌴","🌴","🍍","🐢","🗿"]
+BEACH_TILES = ["🌴","🌴","🍍","🐢","🗿","🐚"]
 SEA_TILES =["🐬","🐳","🐙"]
-CITY_TILES = [""]
+
+HELL_TILES = ["🔥","👻","😈","💀"]
+HEAVEN_TILES = ["📯👼","✨","🐕","👼"]
+SPACE_TILES = ["👾","👽","💫","🚀","🛰"]
+UNDERSEA_TILES = ["🐟","🐙","🐬","🐋"]
 
 def maketrain():
     scene = random.choice(SCENES)
+    if random.randint(1,12) == 12:
+        scene = "special"
     sky = make_sky()
     if scene == "desert":
         landscape, train = make_desert()
@@ -22,8 +28,9 @@ def maketrain():
         landscape, train = make_forest()
     elif scene == "beach":
         landscape, train = make_beach()
-#    elif scene == "city":
-#        landscape, train = make_city(sky)
+    elif scene == "special":
+        sky = ""
+        landscape, train = make_special()
     mise_en_scene = (
     sky + "\n" + \
     landscape[0] + "\n" + \
@@ -87,9 +94,35 @@ def make_beach():
     landscape.append(lastrow)
     return landscape, train
 
-def make_city():
-    train = "🚅" + pick_body()
-    # TODO: make the rest of this city
+def make_special():
+    train = pick_engine() + pick_body()
+
+    scene = random.choice(["hell","heaven","space","undersea"])
+    if scene == "hell":
+        border = "🔥👹🔥👹🔥👹🔥👹🔥👹🔥👹"
+        tileset = HELL_TILES
+    elif scene == "heaven":
+        border = "☁👼☁👼☁👼☁👼☁👼☁👼"
+        tileset = HEAVEN_TILES
+    elif scene == "space":
+        border = "⭐🌟⭐🌟⭐🌟⭐🌟⭐🌟⭐🌟"
+        tileset = SPACE_TILES
+    elif scene == "undersea":
+        border = "🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊"
+        tileset = UNDERSEA_TILES
+    landscape = [border]
+    for row in range(2):
+        row = ""
+        for spot in range(20):
+            tile = random.randint(0,1000)
+            if tile%10 == 0:
+                row += random.choice(tileset)
+            else:
+                row += " "
+        landscape.append(row)
+    landscape.append(border)
+
+    return landscape, train
 
 def make_sky():
     sky = ""
