@@ -151,7 +151,7 @@ def pick_body():
     cars = random.randint(1,8)
     for _ in range(cars):
         body += random.choice(CARS)
-    body += "💨"
+    # body += "💨"
     return body
 
 if __name__ == "__main__":
