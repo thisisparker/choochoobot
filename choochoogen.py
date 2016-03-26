@@ -133,7 +133,8 @@ def make_sky():
             if tile%10 == 0:
                 sky += "☁"
             else:
-                sky += " "
+                if sky is not "":
+                    sky += " "
 
     orb_placement = random.randint(0,len(sky)-1)
     sky = sky[:orb_placement] + orb + sky[orb_placement:]
