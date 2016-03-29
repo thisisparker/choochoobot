@@ -4,17 +4,18 @@ import random
 
 ENGINES = ["🚂"]
 CARS = ["🚃","🚋"]
-SCENES = ["desert","forest","beach"]
+SCENES = ["desert","forest","beach","city"]
 
-ORBS = ["🌕","🌙","☀","☁"]
+ORBS = ["🌕","🌙","☀","☁","🌄","🌈","🗻"]
 DESERT_TILES = ["🌵","🌵","🌴","🌴","🐪","🐢","🐎"]
 FOREST_TILES = ["🌲","🌲","🌲","🌲","🐇","🌳","🌳"]
 BEACH_TILES = ["🌴","🌴","🍍","🐢","🗿","🐚"]
-SEA_TILES =["🐬","🐳","🐙"]
+SEA_TILES = ["🐬","🐳","🐙","⛵️","🚤"]
+CITY_TILES = ["🏠","🏢","🏢","🏡","🏥","🏨","🏪","🏫","🏬","🏭"]
 
 HELL_TILES = ["🔥","👻","😈","💀"]
 HEAVEN_TILES = ["📯👼","✨","🐕","👼"]
-SPACE_TILES = ["👾","👽","💫","🚀","🛰"]
+SPACE_TILES = ["👾","👽","💫","🚀","🛰","🌠"]
 UNDERSEA_TILES = ["🐟","🐙","🐬","🐋"]
 
 def maketrain():
@@ -28,6 +29,8 @@ def maketrain():
         landscape, train = make_forest()
     elif scene == "beach":
         landscape, train = make_beach()
+    elif scene == "city":
+        landscape, train = make_city()
     elif scene == "special":
         sky = ""
         landscape, train = make_special()
@@ -94,6 +97,21 @@ def make_beach():
     landscape.append(lastrow)
     return landscape, train
 
+def make_city():
+    train = pick_engine() + pick_body()
+    landscape = []
+    tileset = CITY_TILES
+    for row in range(4):
+        row = ""
+        for spot in range(20):
+            tile = random.randint(0,1000)
+            if tile%8 == 0:
+                row += random.choice(tileset)
+            else:
+                row += " "
+        landscape.append(row)
+    return landscape, train
+
 def make_special():
     train = pick_engine() + pick_body()
 
@@ -155,4 +173,4 @@ def pick_body():
     return body
 
 if __name__ == "__main__":
-    maketrain()
+    print (maketrain());
