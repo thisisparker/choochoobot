@@ -4,7 +4,7 @@ import random
 
 ENGINES = ["🚂"]
 CARS = ["🚃","🚋"]
-SCENES = ["desert","forest","beach"]
+SCENES = ["desert","forest","field","beach"]
 
 ORBS = ["🌕","🌙","☀","☁"]
 DESERT_TILES = ["🌵","🌵","🌴","🌴","🐪","🐢","🐎"]
