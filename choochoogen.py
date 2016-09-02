@@ -10,6 +10,7 @@ ORBS = ["🌕","🌙","☀","☁"]
 DESERT_TILES = ["🌵","🌵","🌴","🌴","🐪","🐢","🐎"]
 FOREST_TILES = ["🌲","🌲","🌲","🌲","🐇","🌳","🌳"]
 BEACH_TILES = ["🌴","🌴","🍍","🐢","🗿","🐚"]
+FIELD_TILES = ["🌾","🌾","🌾","🌻","🐍","🐈"]
 SEA_TILES =["🐬","🐳","🐙"]
 
 HELL_TILES = ["🔥","👻","😈","💀"]
@@ -28,6 +29,8 @@ def maketrain():
         landscape, train = make_forest()
     elif scene == "beach":
         landscape, train = make_beach()
+    elif scene == "field":
+        landscape, train = make_field()
     elif scene == "special":
         sky = ""
         landscape, train = make_special()
@@ -59,6 +62,21 @@ def make_forest():
     train = pick_engine() + pick_body()
     landscape = []
     tileset = FOREST_TILES
+    for row in range(4):
+        row = ""
+        for spot in range(20):
+            tile = random.randint(0,1000)
+            if tile%10 == 0:
+                row += random.choice(tileset)
+            else:
+                row += " "
+        landscape.append(row)
+    return landscape, train
+
+def make_field():
+    train = pick_engine() + pick_body()
+    landscape = []
+    tileset = FIELD_TILES
     for row in range(4):
         row = ""
         for spot in range(20):
