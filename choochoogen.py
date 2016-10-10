@@ -145,14 +145,18 @@ def make_special():
 def make_sky():
     sky = ""
     orb = random.choice(ORBS)
-# It appears most clients don't let tweets lead with whitespace.
-# This commented out code would have put arbitrary whitespace in the sky
-# But for now we'll just put the sun or moon or cloud on the far left
-#    for _ in range(20):
-#        sky += " "
-#    orb_placement = random.randint(0,len(sky)-1)
-#    sky = sky[:orb_placement] + orb + sky[orb_placement:]
-    sky = orb
+
+    for _ in range(19):
+            tile = random.randint(0,1000)
+            if tile%10 == 0:
+                sky += "☁"
+            else:
+                if sky is not "":
+                    sky += " "
+
+    orb_placement = random.randint(0,len(sky)-1)
+    sky = sky[:orb_placement] + orb + sky[orb_placement:]
+
     return sky
     
 
