@@ -56,7 +56,7 @@ class Scene():
 
         for _ in range(orb_placement):
             self.sky += u"\u2800"
-        self.sky += orb
+        self.sky += orb + u"\uFE0F"
         
         return self.sky
 
