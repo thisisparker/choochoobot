@@ -11,6 +11,7 @@ DESERT_TILES = ["🌵","🌵","🌴","🌴","🐪","🐢","🐎"]
 FOREST_TILES = ["🌲","🌲","🌲","🌲","🐇","🌳","🌳"]
 BEACH_TILES = ["🌴","🌴","🍍","🐢","🗿","🐚"]
 FIELD_TILES = ["🌾","🌾","🌾","🌻","🐍","🐈"]
+WILDFLOWERS_TILES = ["🌼","🌺","🏵️","🌷","🌷","🐝","🦋"]
 SEA_TILES =["🐬","🐳","🐙"]
 
 HELL_TILES = ["🔥","👻","😈","💀"]
@@ -118,6 +119,11 @@ class Field(Scene):
     def __init__(self):
         super(Field, self).__init__("field")
         self.tileset = FIELD_TILES
+
+class Wildflowers(Scene):
+    def __init__(self):
+        super(Wildflowers, self).__init__("wildflowers")
+        self.tileset = WILDFLOWERS_TILES
 
 class Beach(Scene):
     def __init__(self):
