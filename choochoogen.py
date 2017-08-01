@@ -54,7 +54,7 @@ class Scene():
         orb_placement = random.randint(0,12)
 
         for _ in range(orb_placement):
-            self.sky += u"\ua000"
+            self.sky += u"\u2800"
         self.sky += orb
         
         return self.sky
@@ -92,10 +92,17 @@ class Scene():
         else:
             self.landscape.append(self.fill_row())
 
+        tweet = ""
         if self.sky:
-            print(self.sky)
+            tweet += self.sky + "\n"
             
-        print(self.landscape[0], self.landscape[1], self.train, self.landscape[2], self.landscape[3], sep = '\n')
+        tweet += self.landscape[0] + "\n" + \
+                 self.landscape[1] + "\n" + \
+                 self.train + "\n" + \
+                 self.landscape[2] + "\n" + \
+                 self.landscape[3]
+
+        return tweet
 
 class Desert(Scene):
     def __init__(self):
@@ -112,111 +119,50 @@ class Field(Scene):
         super(Field, self).__init__("field")
         self.tileset = FIELD_TILES
 
-class Space(Scene):
-    def __init__(self):
-        super(Space, self).__init__("space")
-        self.top_border = "⭐🌟⭐🌟⭐🌟⭐🌟⭐🌟⭐🌟"
-        self.bottom_border = "⭐🌟⭐🌟⭐🌟⭐🌟⭐🌟⭐🌟"
-        
-        self.tileset = SPACE_TILES
-
 class Beach(Scene):
     def __init__(self):
         super(Beach, self).__init__("beach")
         self.tileset = BEACH_TILES
         self.bottom_border = self.make_sea()
 
+class Space(Scene):
+    def __init__(self):
+        super(Space, self).__init__("space")
+        self.top_border = "⭐🌟⭐🌟⭐🌟⭐🌟⭐🌟⭐🌟"
+        self.bottom_border = "⭐🌟⭐🌟⭐🌟⭐🌟⭐🌟⭐🌟"
+        self.tileset = SPACE_TILES
+
+class Hell(Scene):
+    def __init__(self):
+        super(Hell, self).__init__("hell")
+        self.top_border = "🔥👹🔥👹🔥👹🔥👹🔥👹🔥👹"
+        self.bottom_border = "🔥👹🔥👹🔥👹🔥👹🔥👹🔥👹"
+        self.tileset = HELL_TILES
+
+class Heaven(Scene):
+    def __init__(self):
+        super(Heaven, self).__init__("heaven")
+        self.top_border = "☁👼☁👼☁👼☁👼☁👼☁👼"
+        self.bottom_border = "☁👼☁👼☁👼☁👼☁👼☁👼"
+        self.tileset = HEAVEN_TILES
+
+class Undersea(Scene):
+    def __init__(self):
+        super(Undersea, self).__init__("undersea")
+        self.top_border = "🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊"
+        self.bottom_border = "🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊"
+        self.tileset = UNDERSEA_TILES
+        
 def maketrain():
-    scene = random.choice(SCENES)
+    standard_scenes = [Desert, Beach, Forest, Field]
+    special_scenes = [Space, Undersea, Heaven, Hell]
+
     if random.randint(1,12) == 12:
-        scene = "special"
-    sky = make_sky()
-    if scene == "desert":
-        landscape, train = make_desert()
-    elif scene == "forest":
-        landscape, train = make_forest()
-    elif scene == "beach":
-        landscape, train = make_beach()
-    elif scene == "field":
-        landscape, train = make_field()
-    elif scene == "special":
-        sky = ""
-        landscape, train = make_special()
-    mise_en_scene = (
-    sky + "\n" + \
-    landscape[0] + "\n" + \
-    landscape[1] + "\n" + \
-    train + "\n" + \
-    landscape[2] + "\n" + \
-    landscape[3])
-    return mise_en_scene 
+        scene = random.choice(special_scenes)()
+    else:
+        scene = random.choice(standard_scenes)()
 
-def make_beach():
-    train = pick_engine() + pick_body()
-    landscape = []
-    tileset = BEACH_TILES
-    for row in range(3):
-        row = ""
-        for spot in range(20):
-            tile = random.randint(0,1000)
-            if tile%10 == 0:
-                row += random.choice(tileset)
-            else:
-                row += " "
-        landscape.append(row)
-    tileset = SEA_TILES
-    lastrow = ""
-    for spot in range(12):
-        tile = random.randint(0,1000)
-        if tile%10 == 0:
-            lastrow += random.choice(tileset)
-        else:
-            lastrow += "🌊"
-    landscape.append(lastrow)
-    return landscape, train
+    return scene.generate()
 
-def make_special():
-    train = pick_engine() + pick_body()
-
-    scene = random.choice(["hell","heaven","space","undersea"])
-    if scene == "hell":
-        border = "🔥👹🔥👹🔥👹🔥👹🔥👹🔥👹"
-        tileset = HELL_TILES
-    elif scene == "heaven":
-        border = "☁👼☁👼☁👼☁👼☁👼☁👼"
-        tileset = HEAVEN_TILES
-    elif scene == "space":
-        border = "⭐🌟⭐🌟⭐🌟⭐🌟⭐🌟⭐🌟"
-        tileset = SPACE_TILES
-    elif scene == "undersea":
-        border = "🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊"
-        tileset = UNDERSEA_TILES
-    landscape = [border]
-    for row in range(2):
-        row = ""
-        for spot in range(20):
-            tile = random.randint(0,1000)
-            if tile%10 == 0:
-                row += random.choice(tileset)
-            else:
-                row += " "
-        landscape.append(row)
-    landscape.append(border)
-
-    return landscape, train
-
-def make_sky():
-    sky = ""
-    orb = random.choice(ORBS)
-# It appears most clients don't let tweets lead with whitespace.
-# This commented out code would have put arbitrary whitespace in the sky
-# But for now we'll just put the sun or moon or cloud on the far left
-#    for _ in range(20):
-#        sky += " "
-#    orb_placement = random.randint(0,len(sky)-1)
-#    sky = sky[:orb_placement] + orb + sky[orb_placement:]
-    sky = orb
-    return sky
-    
 if __name__ == "__main__":
     maketrain()
