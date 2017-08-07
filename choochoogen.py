@@ -4,6 +4,8 @@ import random
 from datetime import datetime, timedelta
 import pytz
 import astral
+import xml.etree.ElementTree as ET
+import requests
 
 ENGINES = ["🚂"]
 CARS = ["🚃","🚋"]
@@ -51,6 +53,29 @@ class Scene():
             self.body += random.choice(CARS)
         return self.body
 
+    def get_weather(self):
+        cloud_terms = ["Mostly Cloudy", "Mostly Cloudy with Haze", "Mostly Cloudy and Breezy", "A Few Clouds", "A Few Clouds with Haze", "A Few Clouds and Breezy", "Partly Cloudy", "Partly Cloudy with Haze", "Partly Cloudy and Breezy", "Overcast", "Overcast with Haze", "Overcast and Breezy", "Fog/Mist", "Fog", "Freezing Fog", "Shallow Fog", "Partial Fog", "Patches of Fog", "Fog in Vicinity", "Freezing Fog in Vicinity", "Shallow Fog in Vicinity", "Partial Fog in Vicinity", "Patches of Fog in Vicinity", "Showers in Vicinity Fog", "Light Freezing Fog", "Heavy Freezing Fog"]
+        rain_terms = ["Rain Showers", "Light Rain Showers", "Light Rain and Breezy", "Heavy Rain Showers", "Rain Showers in Vicinity", "Light Showers Rain", "Heavy Showers Rain", "Showers Rain", "Showers Rain in Vicinity", "Rain Showers Fog/Mist", "Light Rain Showers Fog/Mist", "Heavy Rain Showers Fog/Mist", "Rain Showers in Vicinity Fog/Mist", "Light Showers Rain Fog/Mist", "Heavy Showers Rain Fog/Mist", "Showers Rain Fog/Mist", "Showers Rain in Vicinity Fog/Mist", "Light Rain", "Drizzle", "Light Drizzle", "Heavy Drizzle", "Light Rain Fog/Mist", "Drizzle Fog/Mist", "Light Drizzle Fog/Mist", "Heavy Drizzle Fog/Mist", "Light Rain Fog", "Drizzle Fog", "Light Drizzle Fog", "Heavy Drizzle Fog Rain", "Heavy Rain", "Rain Fog/Mist", "Heavy Rain Fog/Mist", "Rain Fog", "Heavy Rain Fog"]
+        
+        try:
+            res = requests.get("http://w1.weather.gov/xml/current_obs/KJRB.xml")
+            xml_tree = ET.fromstring(res.text)
+            weather = xml_tree.find('weather').text
+
+            if weather in cloud_terms:
+                self.sky = self.fill_row(tileset = ["☁️"])
+                return self.sky
+            elif weather in rain_terms:
+                self.sky = self.fill_row(tileset = ["🌧️,🌧️,☁️"])
+            elif "Thunderstorm" in weather:
+                self.sky = self.fill_row(tileset = ["🌧️","⛈️","⛈️"])
+            elif "Snow" in weather:
+                self.sky = self.fill_row(tileset = ["🌨️","❄️"])
+            else:
+                return None
+        except:
+            return None
+
     def make_daysky(self):
         day_length = self.loc.sunset() - self.loc.sunrise()
         day_so_far = self.dt - self.loc.sunrise()
@@ -95,12 +120,14 @@ class Scene():
 
     def make_sky(self):
         self.sky = ""
-
+        
         self.dt = pytz.timezone('America/New_York').localize(datetime.now())
         self.loc = astral.Location(("New York","New York", 40.7527, -73.9772,"America/New_York","0"))
 
         if self.dt >= self.loc.sunrise() and self.dt <= self.loc.sunset():
-            self.make_daysky()
+            self.weather = self.get_weather()
+            if not self.weather:
+                self.make_daysky()
         else:
             self.make_nightsky()
        
