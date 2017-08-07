@@ -2,7 +2,12 @@
 
 import yaml, os
 import choochoogen
+import time
+import random
 from twython import Twython
+
+start_delay = random.randint(0,3600)
+time.sleep(start_delay)
 
 fullpath = os.path.dirname(os.path.realpath(__file__))
 
