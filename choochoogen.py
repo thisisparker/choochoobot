@@ -55,7 +55,7 @@ class Scene():
         day_length = self.loc.sunset() - self.loc.sunrise()
         day_so_far = self.dt - self.loc.sunrise()
 
-        sun_placement = int((day_so_far/day_length) * 12)
+        sun_placement = int((day_so_far.seconds/day_length.seconds) * 12)
 
         for _ in range(sun_placement):
             self.sky += u"\u2800"
@@ -63,7 +63,7 @@ class Scene():
  
     def make_nightsky(self):
         a = astral.Astral()
-        moon_phase = a.moon_phase(self.dt.date)
+        moon_phase = a.moon_phase(self.dt.date())
 
         if moon_phase == 0:
             moon = MOONS[0] 
@@ -87,7 +87,7 @@ class Scene():
             night_length = self.loc.sunrise() - self.loc.sunset(yesterday)
             night_so_far = self.dt - self.loc.sunset(yesterday)
 
-        moon_placement = int((night_so_far/night_length) * 12)
+        moon_placement = int((night_so_far.seconds/night_length.seconds) * 12)
 
         for _ in range(moon_placement):
             self.sky += u"\u2800"
