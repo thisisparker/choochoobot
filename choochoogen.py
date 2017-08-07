@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
 import random
+from datetime import datetime, timedelta
+import pytz
+import astral
 
 ENGINES = ["🚂"]
 CARS = ["🚃","🚋"]
-SCENES = ["desert","forest","field","beach"]
 
-ORBS = ["🌕","🌙","☀","☁"]
+SUN = "☀"
+MOONS = ["🌑","🌒","🌔","🌕","🌘","🌖"]
 DESERT_TILES = ["🌵","🌵","🌴","🌴","🐪","🐢","🐎"]
 FOREST_TILES = ["🌲","🌲","🌲","🌲","🐇","🌳","🌳"]
 BEACH_TILES = ["🌴","🌴","🍍","🐢","🗿","🐚"]
@@ -47,17 +50,60 @@ class Scene():
         for _ in range(cars):
             self.body += random.choice(CARS)
         return self.body
-    
+
+    def make_daysky(self):
+        day_length = self.loc.sunset() - self.loc.sunrise()
+        day_so_far = self.dt - self.loc.sunrise()
+
+        sun_placement = int((day_so_far/day_length) * 12)
+
+        for _ in range(sun_placement):
+            self.sky += u"\u2800"
+        self.sky += SUN + u"\uFE0F"
+ 
+    def make_nightsky(self):
+        a = astral.Astral()
+        moon_phase = a.moon_phase(self.dt.date)
+
+        if moon_phase == 0:
+            moon = MOONS[0] 
+        elif moon_phase < 7:
+            moon = MOONS[1]
+        elif moon_phase < 14:
+            moon = MOONS[2]
+        elif moon_phase == 14:
+            moon = MOONS[3]
+        elif moon_phase < 21:
+            moon = MOONS[4]
+        else:
+            moon = MOONS[5]
+
+        if self.dt > self.loc.sunset():
+            tomorrow = self.dt + timedelta(days = 1)
+            night_length = self.loc.sunrise(tomorrow) - self.loc.sunset()
+            night_so_far = self.dt - self.loc.sunset()
+        elif self.dt < self.loc.sunrise():
+            yesterday = self.dt - timedelta(days = 1)
+            night_length = self.loc.sunrise() - self.loc.sunset(yesterday)
+            night_so_far = self.dt - self.loc.sunset(yesterday)
+
+        moon_placement = int((night_so_far/night_length) * 12)
+
+        for _ in range(moon_placement):
+            self.sky += u"\u2800"
+        self.sky += moon + u"\uFE0F"
+
     def make_sky(self):
         self.sky = ""
 
-        orb = random.choice(ORBS)
-        orb_placement = random.randint(0,12)
+        self.dt = pytz.timezone('America/New_York').localize(datetime.now())
+        self.loc = astral.Location(("New York","New York", 40.7527, -73.9772,"America/New_York","0"))
 
-        for _ in range(orb_placement):
-            self.sky += u"\u2800"
-        self.sky += orb + u"\uFE0F"
-        
+        if self.dt >= self.loc.sunrise() and self.dt <= self.loc.sunset():
+            self.make_daysky()
+        else:
+            self.make_nightsky()
+       
         return self.sky
 
     def make_sea(self):
@@ -160,7 +206,7 @@ class Undersea(Scene):
         self.tileset = UNDERSEA_TILES
         
 def maketrain():
-    standard_scenes = [Desert, Beach, Forest, Field]
+    standard_scenes = [Desert, Beach, Forest, Field, Wildflowers]
     special_scenes = [Space, Undersea, Heaven, Hell]
 
     if random.randint(1,12) == 12:
