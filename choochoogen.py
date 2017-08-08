@@ -52,8 +52,8 @@ class Scene():
         return self.body
 
     def make_daysky(self):
-        day_length = self.loc.sunset() - self.loc.sunrise()
-        day_so_far = self.dt - self.loc.sunrise()
+        day_length = self.loc.sunset(self.dt.date()) - self.loc.sunrise(self.dt.date())
+        day_so_far = self.dt - self.loc.sunrise(self.dt.date())
 
         sun_placement = int((day_so_far.seconds/day_length.seconds) * 12)
 
@@ -63,7 +63,18 @@ class Scene():
  
     def make_nightsky(self):
         a = astral.Astral()
-        moon_phase = a.moon_phase(self.dt.date())
+
+        tomorrow = self.dt + timedelta(days = 1)
+        yesterday = self.dt - timedelta(days = 1)
+
+        if self.dt > self.loc.sunset(self.dt.date()):
+            moon_phase = a.moon_phase(self.dt.date())
+            night_length = self.loc.sunrise(tomorrow) - self.loc.sunset(self.dt.date())
+            night_so_far = self.dt - self.loc.sunset(self.dt.date())
+        elif self.dt < self.loc.sunrise(self.dt.date()):
+            moon_phase = a.moon_phase(yesterday.date())
+            night_length = self.loc.sunrise(self.dt.date()) - self.loc.sunset(yesterday)
+            night_so_far = self.dt - self.loc.sunset(yesterday)
 
         if moon_phase == 0:
             moon = MOONS[0] 
@@ -78,15 +89,6 @@ class Scene():
         else:
             moon = MOONS[5]
 
-        if self.dt > self.loc.sunset():
-            tomorrow = self.dt + timedelta(days = 1)
-            night_length = self.loc.sunrise(tomorrow) - self.loc.sunset()
-            night_so_far = self.dt - self.loc.sunset()
-        elif self.dt < self.loc.sunrise():
-            yesterday = self.dt - timedelta(days = 1)
-            night_length = self.loc.sunrise() - self.loc.sunset(yesterday)
-            night_so_far = self.dt - self.loc.sunset(yesterday)
-
         moon_placement = int((night_so_far.seconds/night_length.seconds) * 12)
 
         for _ in range(moon_placement):
@@ -99,7 +101,7 @@ class Scene():
         self.dt = pytz.timezone('America/New_York').localize(datetime.now())
         self.loc = astral.Location(("New York","New York", 40.7527, -73.9772,"America/New_York","0"))
 
-        if self.dt >= self.loc.sunrise() and self.dt <= self.loc.sunset():
+        if self.dt >= self.loc.sunrise(self.dt.date()) and self.dt <= self.loc.sunset(self.dt.date()):
             self.make_daysky()
         else:
             self.make_nightsky()
@@ -209,7 +211,7 @@ def maketrain():
     standard_scenes = [Desert, Beach, Forest, Field, Wildflowers]
     special_scenes = [Space, Undersea, Heaven, Hell]
 
-    if random.randint(1,12) == 12:
+    if random.randint(1,20) == 20:
         scene = random.choice(special_scenes)()
     else:
         scene = random.choice(standard_scenes)()
