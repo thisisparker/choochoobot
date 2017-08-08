@@ -55,7 +55,7 @@ class Scene():
         day_length = self.loc.sunset(self.dt.date()) - self.loc.sunrise(self.dt.date())
         day_so_far = self.dt - self.loc.sunrise(self.dt.date())
 
-        sun_placement = int((day_so_far.seconds/day_length.seconds) * 12)
+        sun_placement = 14 - int((day_so_far.seconds/day_length.seconds) * 15)
 
         for _ in range(sun_placement):
             self.sky += u"\u2800"
@@ -89,7 +89,7 @@ class Scene():
         else:
             moon = MOONS[5]
 
-        moon_placement = int((night_so_far.seconds/night_length.seconds) * 12)
+        moon_placement = 14 - int((night_so_far.seconds/night_length.seconds) * 15)
 
         for _ in range(moon_placement):
             self.sky += u"\u2800"
