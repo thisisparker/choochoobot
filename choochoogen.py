@@ -66,11 +66,14 @@ class Scene():
                 self.sky = self.fill_row(tileset = ["☁️"], item_rarity = 5)
                 return self.sky
             elif weather in rain_terms:
-                self.sky = self.fill_row(tileset = ["🌧️,🌧️,☁️"], item_rarity = 5)
+                self.sky = self.fill_row(tileset = ["🌧️","🌧️","☁️"], item_rarity = 5)
+                return self.sky
             elif "Thunderstorm" in weather:
                 self.sky = self.fill_row(tileset = ["🌧️","⛈️","⛈️"], item_rarity = 5)
+                return self.sky
             elif "Snow" in weather:
                 self.sky = self.fill_row(tileset = ["🌨️","❄️"], item_rarity = 5)
+                return self.sky
             else:
                 return None
         except:
@@ -146,7 +149,7 @@ class Scene():
 
         if not item_rarity:
             item_rarity = self.item_rarity
-            
+ 
         for spot in range(length):
             tile = random.randint(1, item_rarity)
             if tile == 1:
