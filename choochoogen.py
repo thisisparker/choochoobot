@@ -63,14 +63,14 @@ class Scene():
             weather = xml_tree.find('weather').text
 
             if weather in cloud_terms:
-                self.sky = self.fill_row(tileset = ["☁️"])
+                self.sky = self.fill_row(tileset = ["☁️"], item_rarity = 5)
                 return self.sky
             elif weather in rain_terms:
-                self.sky = self.fill_row(tileset = ["🌧️,🌧️,☁️"])
+                self.sky = self.fill_row(tileset = ["🌧️,🌧️,☁️"], item_rarity = 5)
             elif "Thunderstorm" in weather:
-                self.sky = self.fill_row(tileset = ["🌧️","⛈️","⛈️"])
+                self.sky = self.fill_row(tileset = ["🌧️","⛈️","⛈️"], item_rarity = 5)
             elif "Snow" in weather:
-                self.sky = self.fill_row(tileset = ["🌨️","❄️"])
+                self.sky = self.fill_row(tileset = ["🌨️","❄️"], item_rarity = 5)
             else:
                 return None
         except:
@@ -136,14 +136,17 @@ class Scene():
     def make_sea(self):
         return self.fill_row(tileset = SEA_TILES, space_char = "🌊", length = 12)
      
-    def fill_row(self, tileset = None, space_char = " ", length = 20):
+    def fill_row(self, tileset = None, item_rarity = None, space_char = " ", length = 20):
         row = ""
 
         if not tileset:
             tileset = self.tileset
+
+        if not item_rarity:
+            item_rarity = self.item_rarity
             
         for spot in range(length):
-            tile = random.randint(1, self.item_rarity)
+            tile = random.randint(1, item_rarity)
             if tile == 1:
                 row += random.choice(tileset)
             else:
