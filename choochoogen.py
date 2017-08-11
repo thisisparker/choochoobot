@@ -53,6 +53,12 @@ class Scene():
             self.body += random.choice(CARS)
         return self.body
 
+    def add_clouds(self):
+        self.sky = self.sky.replace(SUN, "⛅ ")
+        for _ in range(len(self.sky)):
+            if self.sky[_] == u"\u2800" and random.randint(1,5) == 1:
+                self.sky = self.sky[:_] + "☁️" + self.sky[_:]
+
     def get_weather(self):
         cloud_terms = ["Mostly Cloudy", "Mostly Cloudy with Haze", "Mostly Cloudy and Breezy", "A Few Clouds", "A Few Clouds with Haze", "A Few Clouds and Breezy", "Partly Cloudy", "Partly Cloudy with Haze", "Partly Cloudy and Breezy", "Overcast", "Overcast with Haze", "Overcast and Breezy", "Fog/Mist", "Fog", "Freezing Fog", "Shallow Fog", "Partial Fog", "Patches of Fog", "Fog in Vicinity", "Freezing Fog in Vicinity", "Shallow Fog in Vicinity", "Partial Fog in Vicinity", "Patches of Fog in Vicinity", "Showers in Vicinity Fog", "Light Freezing Fog", "Heavy Freezing Fog"]
         rain_terms = ["Rain Showers", "Light Rain Showers", "Light Rain and Breezy", "Heavy Rain Showers", "Rain Showers in Vicinity", "Light Showers Rain", "Heavy Showers Rain", "Showers Rain", "Showers Rain in Vicinity", "Rain Showers Fog/Mist", "Light Rain Showers Fog/Mist", "Heavy Rain Showers Fog/Mist", "Rain Showers in Vicinity Fog/Mist", "Light Showers Rain Fog/Mist", "Heavy Showers Rain Fog/Mist", "Showers Rain Fog/Mist", "Showers Rain in Vicinity Fog/Mist", "Light Rain", "Drizzle", "Light Drizzle", "Heavy Drizzle", "Light Rain Fog/Mist", "Drizzle Fog/Mist", "Light Drizzle Fog/Mist", "Heavy Drizzle Fog/Mist", "Light Rain Fog", "Drizzle Fog", "Light Drizzle Fog", "Heavy Drizzle Fog Rain", "Heavy Rain", "Rain Fog/Mist", "Heavy Rain Fog/Mist", "Rain Fog", "Heavy Rain Fog"]
@@ -63,7 +69,7 @@ class Scene():
             weather = xml_tree.find('weather').text
 
             if weather in cloud_terms:
-                self.sky = self.fill_row(tileset = ["☁️"], item_rarity = 5)
+                self.add_clouds()
                 return self.sky
             elif weather in rain_terms:
                 self.sky = self.fill_row(tileset = ["🌧️","🌧️","☁️"], item_rarity = 5)
@@ -85,9 +91,10 @@ class Scene():
 
         sun_placement = 14 - int((day_so_far.seconds/day_length.seconds) * 15)
 
-        for _ in range(sun_placement):
+        for _ in range(14):
+            if _ == sun_placement:
+                self.sky += SUN + u"\uFE0F"
             self.sky += u"\u2800"
-        self.sky += SUN + u"\uFE0F"
  
     def make_nightsky(self):
         a = astral.Astral()
@@ -130,9 +137,8 @@ class Scene():
         self.loc = astral.Location(("New York","New York", 40.7527, -73.9772,"America/New_York","0"))
 
         if self.dt >= self.loc.sunrise(self.dt.date()) and self.dt <= self.loc.sunset(self.dt.date()):
-            self.weather = self.get_weather()
-            if not self.weather:
-                self.make_daysky()
+            self.make_daysky()
+            self.get_weather()
         else:
             self.make_nightsky()
        
