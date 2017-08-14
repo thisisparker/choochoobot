@@ -55,9 +55,9 @@ class Scene():
 
     def add_clouds(self):
         self.sky = self.sky.replace(SUN, "⛅ ")
-        for _ in range(len(self.sky)):
+        for _ in range(len(self.sky) - 1):
             if self.sky[_] == u"\u2800" and random.randint(1,5) == 1:
-                self.sky = self.sky[:_] + "☁️" + self.sky[_:]
+                self.sky = self.sky[:_] + "☁️" + self.sky[_ + 1:]
 
     def get_weather(self):
         cloud_terms = ["Mostly Cloudy", "Mostly Cloudy with Haze", "Mostly Cloudy and Breezy", "A Few Clouds", "A Few Clouds with Haze", "A Few Clouds and Breezy", "Partly Cloudy", "Partly Cloudy with Haze", "Partly Cloudy and Breezy", "Overcast", "Overcast with Haze", "Overcast and Breezy", "Fog/Mist", "Fog", "Freezing Fog", "Shallow Fog", "Partial Fog", "Patches of Fog", "Fog in Vicinity", "Freezing Fog in Vicinity", "Shallow Fog in Vicinity", "Partial Fog in Vicinity", "Patches of Fog in Vicinity", "Showers in Vicinity Fog", "Light Freezing Fog", "Heavy Freezing Fog"]
