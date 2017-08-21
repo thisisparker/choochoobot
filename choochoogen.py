@@ -91,7 +91,7 @@ class Scene():
 
         sun_placement = 14 - int((day_so_far.seconds/day_length.seconds) * 15)
 
-        for _ in range(14):
+        for _ in range(15):
             if _ == sun_placement:
                 self.sky += SUN + u"\uFE0F"
             self.sky += u"\u2800"
