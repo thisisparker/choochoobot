@@ -56,7 +56,7 @@ class Scene():
     def add_clouds(self):
         self.sky = self.sky.replace(SUN, "⛅ ")
         for _ in range(len(self.sky) - 1):
-            if self.sky[_] == u"\u2800" and random.randint(1,5) == 1:
+            if self.sky[_] == "\u2800" and random.randint(1,5) == 1:
                 self.sky = self.sky[:_] + "☁️" + self.sky[_ + 1:]
 
     def get_weather(self):
@@ -93,8 +93,8 @@ class Scene():
 
         for _ in range(15):
             if _ == sun_placement:
-                self.sky += SUN + u"\uFE0F"
-            self.sky += u"\u2800"
+                self.sky += SUN + "\uFE0F"
+            self.sky += "\u2800"
  
     def make_nightsky(self):
         a = astral.Astral()
@@ -127,8 +127,8 @@ class Scene():
         moon_placement = 14 - int((night_so_far.seconds/night_length.seconds) * 15)
 
         for _ in range(moon_placement):
-            self.sky += u"\u2800"
-        self.sky += moon + u"\uFE0F"
+            self.sky += "\u2800"
+        self.sky += moon + "\uFE0F"
 
     def make_sky(self):
         self.sky = ""
