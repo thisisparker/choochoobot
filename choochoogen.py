@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 import requests
 
 ENGINES = ["🚂"]
-CARS = ["🚃","🚋"]
+CARS = ["🚃"]
 
 SUN = "☀"
 MOONS = ["🌑","🌒","🌔","🌕","🌖","🌘"]
