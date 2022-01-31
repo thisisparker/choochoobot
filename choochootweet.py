@@ -11,7 +11,7 @@ time.sleep(start_delay)
 
 fullpath = os.path.dirname(os.path.realpath(__file__))
 
-config = yaml.load(open(fullpath + "/config.yaml"))
+config = yaml.safe_load(open(fullpath + "/config.yaml"))
 
 twitter_app_key = config['twitter_app_key']
 twitter_app_secret = config['twitter_app_secret']
