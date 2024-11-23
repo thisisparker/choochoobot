@@ -7,6 +7,9 @@ import astral
 import xml.etree.ElementTree as ET
 import requests
 
+from astral import moon as amoon
+from astral.sun import sun
+
 ENGINES = ["🚂"]
 CARS = ["🚃"]
 
@@ -86,8 +89,8 @@ class Scene():
             return None
 
     def make_daysky(self):
-        day_length = self.loc.sunset(self.dt.date()) - self.loc.sunrise(self.dt.date())
-        day_so_far = self.dt - self.loc.sunrise(self.dt.date())
+        day_length = self.sun['sunset'] - self.sun['sunrise']
+        day_so_far = self.dt - self.sun['sunrise']
 
         sun_placement = 14 - int((day_so_far.seconds/day_length.seconds) * 15)
 
@@ -97,29 +100,29 @@ class Scene():
             self.sky += "\u2800"
  
     def make_nightsky(self):
-        a = astral.Astral()
-
         tomorrow = self.dt + timedelta(days = 1)
         yesterday = self.dt - timedelta(days = 1)
 
-        if self.dt > self.loc.sunset(self.dt.date()):
-            moon_phase = a.moon_phase(self.dt.date())
-            night_length = self.loc.sunrise(tomorrow) - self.loc.sunset(self.dt.date())
-            night_so_far = self.dt - self.loc.sunset(self.dt.date())
+        if self.dt > self.sun['sunset']:
+            moon_phase = int(amoon.phase(self.dt.date()))
+            night_length = (sun(self.loc.observer, tomorrow)['sunrise']
+                            - sun(self.loc.observer)['sunset'])
+            night_so_far = self.dt - self.sun['sunset']
         elif self.dt < self.loc.sunrise(self.dt.date()):
-            moon_phase = a.moon_phase(yesterday.date())
-            night_length = self.loc.sunrise(self.dt.date()) - self.loc.sunset(yesterday)
-            night_so_far = self.dt - self.loc.sunset(yesterday)
+            moon_phase = int(amoon.phase(yesterday.date()))
+            night_length = (self.sun['sunrise']
+                            - sun(self.loc.observer, yesterday)['sunset'])
+            night_so_far = self.dt - sun(self.loc.observer, yesterday)['sunset']
 
         if moon_phase == 0:
             moon = MOONS[0] 
-        elif moon_phase < 7:
+        elif moon_phase <= 7:
             moon = MOONS[1]
         elif moon_phase < 14:
             moon = MOONS[2]
         elif moon_phase == 14:
             moon = MOONS[3]
-        elif moon_phase < 21:
+        elif moon_phase <= 21:
             moon = MOONS[4]
         else:
             moon = MOONS[5]
@@ -134,9 +137,18 @@ class Scene():
         self.sky = ""
 
         self.dt = pytz.timezone('America/New_York').localize(datetime.now())
-        self.loc = astral.Location(("New York","New York", 40.7527, -73.9772,"America/New_York","0"))
 
-        if self.dt >= self.loc.sunrise(self.dt.date()) and self.dt <= self.loc.sunset(self.dt.date()):
+        self.loc = astral.LocationInfo(name='New York',
+                                       region='USA',
+                                       timezone='US/Eastern',
+                                       latitude=40.71666666666667,
+                                       longitude=-74.0)
+
+        self.sun = sun(self.loc.observer,
+                       date=self.dt,
+                       tzinfo=self.loc.timezone)
+
+        if self.dt >= self.sun["sunrise"] and self.dt <= self.sun["sunset"]:
             self.make_daysky()
             self.get_weather()
         else:
