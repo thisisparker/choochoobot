@@ -5,8 +5,7 @@ import choochoogen
 import time
 import random
 from mastodon import Mastodon
-from twython import Twython
-
+from atproto import Client
 
 start_delay = random.randint(0,3600)
 time.sleep(start_delay)
@@ -18,4 +17,10 @@ config = yaml.safe_load(open(fullpath + "/config.yaml"))
 mc = Mastodon(access_token=config['mastodon_token'],
               api_base_url=config['mastodon_url'])
 
-mc.toot(tweet)
+bsky = Client()
+bsky.login(config['bsky_username'], config['bsky_password'])
+
+post = choochoogen.maketrain()
+
+mc.toot(post)
+bsky.send_post(post)
