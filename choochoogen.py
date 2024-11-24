@@ -67,7 +67,7 @@ class Scene():
         rain_terms = ["Rain Showers", "Light Rain Showers", "Light Rain and Breezy", "Heavy Rain Showers", "Rain Showers in Vicinity", "Light Showers Rain", "Heavy Showers Rain", "Showers Rain", "Showers Rain in Vicinity", "Rain Showers Fog/Mist", "Light Rain Showers Fog/Mist", "Heavy Rain Showers Fog/Mist", "Rain Showers in Vicinity Fog/Mist", "Light Showers Rain Fog/Mist", "Heavy Showers Rain Fog/Mist", "Showers Rain Fog/Mist", "Showers Rain in Vicinity Fog/Mist", "Light Rain", "Drizzle", "Light Drizzle", "Heavy Drizzle", "Light Rain Fog/Mist", "Drizzle Fog/Mist", "Light Drizzle Fog/Mist", "Heavy Drizzle Fog/Mist", "Light Rain Fog", "Drizzle Fog", "Light Drizzle Fog", "Heavy Drizzle Fog Rain", "Heavy Rain", "Rain Fog/Mist", "Heavy Rain Fog/Mist", "Rain Fog", "Heavy Rain Fog"]
         
         try:
-            res = requests.get("http://w1.weather.gov/xml/current_obs/KNYC.xml")
+            res = requests.get("https://forecast.weather.gov/xml/current_obs/KNYC.xml")
             xml_tree = ET.fromstring(res.text)
             weather = xml_tree.find('weather').text
 
