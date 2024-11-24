@@ -4,11 +4,13 @@ import yaml, os
 import choochoogen
 import time
 import random
+import sys
 from mastodon import Mastodon
 from atproto import Client
 
-start_delay = random.randint(0,3600)
-time.sleep(start_delay)
+if '-n' not in sys.argv:
+    start_delay = random.randint(0,3600)
+    time.sleep(start_delay)
 
 fullpath = os.path.dirname(os.path.realpath(__file__))
 
