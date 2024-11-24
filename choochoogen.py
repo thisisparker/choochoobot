@@ -108,7 +108,7 @@ class Scene():
             night_length = (sun(self.loc.observer, tomorrow)['sunrise']
                             - sun(self.loc.observer)['sunset'])
             night_so_far = self.dt - self.sun['sunset']
-        elif self.dt < self.loc.sunrise(self.dt.date()):
+        elif self.dt < self.sun['sunrise']:
             moon_phase = int(amoon.phase(yesterday.date()))
             night_length = (self.sun['sunrise']
                             - sun(self.loc.observer, yesterday)['sunset'])
