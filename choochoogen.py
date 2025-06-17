@@ -69,7 +69,7 @@ class Scene():
         try:
             res = requests.get("https://forecast.weather.gov/xml/current_obs/KNYC.xml")
             xml_tree = ET.fromstring(res.text)
-            weather = xml_tree.find('weather').text
+            weather = xml_tree.find('weather').text.strip()
 
             if weather in cloud_terms:
                 self.add_clouds()
